@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useState, useEffect } from "react";
+import Formulario from "./components/Formulario";
+import axios from "axios";
 
 function App() {
+  //State de la busqueda. Objeto que tiene artista y canción. guardarBusquedaLetra trae el objeto desde el formulario
+  const [busquedaletra, guardarBusquedaLetra] = useState({});
+
+  //State para la Letra
+  const [letra, guardarLetra] = useState("");
+
+  useEffect(() => {
+    //Revisamos que el objeto no esté vacío
+    if (Object.keys(busquedaletra).length === 0) return;
+
+    //Consulta a api de letra
+    const consultarAPILetra = async () => {
+      const { artista, cancion } = busquedaletra;
+      const url = `https://api.lyrics.ovh/v1/${artista}/${cancion}`;
+
+      //Axios
+      const resultado = await axios.get(url);
+
+      //Pasar letra al state
+      guardarLetra(resultado.data.lyrics);
+    };
+    consultarAPILetra();
+  }, [busquedaletra]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Formulario guardarBusquedaLetra={guardarBusquedaLetra} />
+    </Fragment>
   );
 }
 
