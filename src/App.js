@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import Formulario from "./components/Formulario";
 import axios from "axios";
 import Cancion from "./components/Cancion";
+import Info from "./components/Info";
 
 function App() {
   //State de la busqueda. Objeto que tiene artista y canción. guardarBusquedaLetra trae el objeto desde el formulario
@@ -34,20 +35,22 @@ function App() {
       // const resultado2 = await axios.get(url2);
 
       guardarLetra(letra.data.lyrics);
-      guardarInfo(informacion.data.artist[0]);
+      guardarInfo(informacion.data.artists[0]);
 
       //Pasar letra al state
       // guardarLetra(resultado.data.lyrics);
     };
     consultarAPILetra();
-  }, [busquedaletra]);
+  }, [busquedaletra, info]);
 
   return (
     <Fragment>
       <Formulario guardarBusquedaLetra={guardarBusquedaLetra} />
       <div className="container mt-5">
         <div className="row">
-          <div className="col-md-6"></div>
+          <div className="col-md-6">
+            <Info info={info} />
+          </div>
           <div className="col-md-6">
             <Cancion letra={letra} />
           </div>
